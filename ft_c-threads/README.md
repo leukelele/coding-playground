@@ -20,3 +20,6 @@ Exiting 'threadFunc()'
 ```
 
 This indicates that as the `start_routine`, that was fed to `pthread_create()`, executes, the parent program continues with its own execution, which is similar to what might occur had I used a fork instead. This makes sense as a thread is essentially a lightweight process.
+
+## 2nd entry: POSIX, what is it?
+The reason for the question "What is POSIX?" is a result of what 'pthreads' are: POSIX Threads. The term POSIX stands for Portable Operating System Interface. 
