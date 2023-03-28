@@ -18,5 +18,5 @@ After, running some test parameters through the function
 I conclude that the `substring` macro **subtracts** the characters not within the bounds specified. The specification for `substring` likely follows some format like
 
 ```racket
-substring *string* *begin bound (inclusive* *end bound (exclusive)*
+substring *string* [begin bound (inclusive)] [end bound (exclusive)]
 ```
