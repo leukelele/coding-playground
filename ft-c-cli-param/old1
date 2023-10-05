@@ -1,0 +1,21 @@
+#include <stdio.h>
+#include <string.h>
+
+int main(int argc, char *argv[]) {
+  // how do you verify that the program was given an argument
+  // without using an if statement; is it even possibe?
+  //  - the first thing you need to understand is what are
+  //    the default values of when a parameter is not provided
+  printf("%d\n", argc);
+  for (int i=1; i < argc; i++) {
+    printf("%s", argv[i]);
+  }
+  // the most crucial step is that you forgot that it would result
+  // an outbounds; in providing the previous code no parameter it 
+  // should skip the for loop A HINT to verifying that the program
+  // was not provided an argument
+
+  for(int i=1; i<argc; i++) {
+    
+  }
+}
