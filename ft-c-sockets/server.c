@@ -9,7 +9,7 @@
 #include <unistd.h>
 
 
-#define PORT 8080         // the port that the server will be listening to
+#define PORT 22           // the port that the server will be listening to
 
 int main(int argc, char const* argv[])
 {
@@ -18,7 +18,8 @@ int main(int argc, char const* argv[])
                                           // - `socket()` returns a file descriptor (fd) 
                                           //   for the new socket; on error, it will
                                           //   return -1
-                                          // - `accept()` is similar
+                                          // - `accept()` is similar, though not in
+					  //   functionality
     ssize_t valread;
     struct sockaddr_in address;           // from `netinet/in.h`, is a struct for
                                           // storing addresses
@@ -29,25 +30,44 @@ int main(int argc, char const* argv[])
     char* hello = "Hello from server";
 
     // Creating socket file descriptor
-    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {  // `AF_INET` is used to
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {  // socket() accepts args
+							      // as follows:
+							      // socket(domain, type,
+							      // protocol)
+							      //
+							      // `AF_INET` is used to
                                                               // designate the type of
                                                               // addr (IPv4) 
                                                               // that the socket
-                                                              // comm. with 
+                                                              // comm. with; `SOCK_STREAM`
+							      // is used to indicate the type
+							      // of comm.; `0` is the val.
+							      // for the IP protocol 
         perror("socket failed");
         exit(EXIT_FAILURE);
     }
 
-    // Forcefully attaching socket to the port 8080
-    if (setsockopt(server_fd, SOL_SOCKET,
-                   SO_REUSEADDR | SO_REUSEPORT, &opt,
-                   sizeof(opt))) {
+    // Forcefully attaching socket to the port 22; this code is optional but helps in the
+    // resuse of addr and port -> it prevents the error "address already in use"
+    if (setsockopt(server_fd, SOL_SOCKET,	       // `setsockopt` is used to config
+                   SO_REUSEADDR | SO_REUSEPORT, &opt,  // options for a socket, allows for
+                   sizeof(opt))) {		       // mod of socket behaviors at
+						       // runtime
+						       //
+						       // args: (socket fd, level, options,
+						       // ptr to val set by option, option
+						       // length)
+						       // `SOL_SOCKET` for socket lvl opts;
+						       // `SO_REUSEADDR` and `SO_REUSEPORT`
+						       // to allow for socket and port
+						       // reuse `&opt` to indicate
+						       // enabling/disabling
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
 
     address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_addr.s_addr = INADDR_ANY;	// local host IP
     address.sin_port = htons(PORT);
 
     // Forcefully attaching socket to the port 8080
