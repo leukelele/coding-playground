@@ -5,6 +5,32 @@
 #include <stdio.h>
 
 int minSubArrayLen(int target, int* nums, int numsSize) {
+  int maxLen = numsSize;  // limit for loops
+  int minLen = 9999;      // minimum length of subarray w sum equal to target
+  int currLen;            // current length of subarray
+  int currSum;            // current sum of subarray
+
+  for (int i = 0; i < maxLen; i++) {
+    currSum = nums[i];
+    
+    if (currSum >= target) {
+      minLen = 1;
+    }
+
+    for (int j = (i+1); j < maxLen; j++) {
+      currSum += nums[j];
+      currLen = (j+1) - i;
+
+      if (currSum >= target && currLen < minLen) {
+        minLen = currLen;
+        break;
+      }
+      else if (currSum > target) break;
+    }
+  }
+
+  if (minLen == 9999) minLen = 0;
+
   return minLen;
 }
 
@@ -61,4 +87,4 @@ int main() {
   printf("===========================================\n");
 
   return 0;
-}
+};
