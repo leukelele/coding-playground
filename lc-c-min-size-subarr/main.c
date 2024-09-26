@@ -13,21 +13,19 @@ int minSubArrayLen(int target, int* nums, int numsSize) {
 
   int firstMin = 1;
 
-  for (int i = rightBound; i < numsSize; i++) {
+  // increments the subarray right bound until the end of the subarray
+  for (rightBound = 0; rightBound < numsSize; rightBound++) {
+    currSum += nums[rightBound];
 
-    // increment right bound until subarray w sum >= target
-    currSum += nums[i];
-    if (currSum >= target) rightBound = i;
-
-    // trim left bound until subarray w sum < target
-    while (leftBound < i && (currSum - nums[leftBound]) >= target) {
+    // trim off values on left side of subarray so long subarray sum >= target
+    while ((currSum - nums[leftBound]) >= target && leftBound < rightBound) {
       currSum -= nums[leftBound];
       leftBound += 1;
     }
 
     // update minLen for shorter subarray length w sum >= target
     currLen = rightBound - leftBound + 1;
-    if (currSum >= target && firstMin == 1) {
+    if (firstMin == 1 && currSum >= target) {     // gets the init minLen
       minLen = currLen;
       firstMin = 0;
     }
