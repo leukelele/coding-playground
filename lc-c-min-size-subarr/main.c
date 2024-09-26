@@ -5,31 +5,34 @@
 #include <stdio.h>
 
 int minSubArrayLen(int target, int* nums, int numsSize) {
-  int maxLen = numsSize;  // limit for loops
-  int minLen = 9999;      // minimum length of subarray w sum equal to target
-  int currLen;            // current length of subarray
-  int currSum;            // current sum of subarray
+  int minLen = 0;    // minimum length of subarray w sum >= target; default = 0
+  int currLen = 0;        // current len of subarr
+  int currSum = 0;        // current sum of subarr
+  int leftBound = 0;      // subarray left bound
+  int rightBound = 0;     // subarray right bound
 
-  for (int i = 0; i < maxLen; i++) {
-    currSum = nums[i];
-    
-    if (currSum >= target) {
-      minLen = 1;
+  int firstMin = 1;
+
+  for (int i = rightBound; i < numsSize; i++) {
+
+    // increment right bound until subarray w sum >= target
+    currSum += nums[i];
+    if (currSum >= target) rightBound = i;
+
+    // trim left bound until subarray w sum < target
+    while (leftBound < i && (currSum - nums[leftBound]) >= target) {
+      currSum -= nums[leftBound];
+      leftBound += 1;
     }
 
-    for (int j = (i+1); j < maxLen; j++) {
-      currSum += nums[j];
-      currLen = (j+1) - i;
-
-      if (currSum >= target && currLen < minLen) {
-        minLen = currLen;
-        break;
-      }
-      else if (currSum > target) break;
+    // update minLen for shorter subarray length w sum >= target
+    currLen = rightBound - leftBound + 1;
+    if (currSum >= target && firstMin == 1) {
+      minLen = currLen;
+      firstMin = 0;
     }
+    else if (currSum >= target && currLen < minLen) minLen = currLen;
   }
-
-  if (minLen == 9999) minLen = 0;
 
   return minLen;
 }
@@ -41,6 +44,7 @@ struct Test {
 
 int main() {
 
+  // solution: 2
   printf("===========================================\n");
   struct Test case1;
   case1.numsSize = 6;
@@ -54,6 +58,7 @@ int main() {
   printf("minLen: %d\n", minSubArrayLen(tar, case1.nums, case1.numsSize));
   printf("===========================================\n");
 
+  // solution: 1
   struct Test case2;
   case2.numsSize = 3;
   case2.nums[0] = 1;
@@ -63,6 +68,7 @@ int main() {
   printf("minLen: %d\n", minSubArrayLen(tar, case2.nums, case2.numsSize));
   printf("===========================================\n");
 
+  // solution: 0
   struct Test case3;
   case3.numsSize = 6;
   case3.nums[0] = 1;
@@ -75,6 +81,7 @@ int main() {
   printf("minLen: %d\n", minSubArrayLen(tar, case3.nums, case3.numsSize));
   printf("===========================================\n");
 
+  // solution: 3
   struct Test case4;
   case4.numsSize = 5;
   case4.nums[0] = 1;
@@ -85,6 +92,24 @@ int main() {
   tar = 11;
   printf("minLen: %d\n", minSubArrayLen(tar, case4.nums, case4.numsSize));
   printf("===========================================\n");
+
+  // solution: 2
+  struct Test case5;
+  case5.numsSize = 10;
+  case5.nums[0] = 5;
+  case5.nums[1] = 1;
+  case5.nums[2] = 3;
+  case5.nums[3] = 5;
+  case5.nums[4] = 10;
+  case5.nums[5] = 7;
+  case5.nums[6] = 4;
+  case5.nums[7] = 9;
+  case5.nums[8] = 2;
+  case5.nums[9] = 8;
+  tar = 15;
+  printf("minLen: %d\n", minSubArrayLen(tar, case5.nums, case5.numsSize));
+  printf("===========================================\n");
+
 
   return 0;
 };
