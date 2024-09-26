@@ -5,7 +5,6 @@
 #include <stdio.h>
 #include <limits.h>
 
-
 int minSubArrayLen(int target, int* nums, int numsSize) {
   int minLen = INT_MAX;   // minimum length of subarray w sum >= target; default = 0
   int currLen = 0;        // current len of subarr
@@ -17,7 +16,7 @@ int minSubArrayLen(int target, int* nums, int numsSize) {
   for (rightBound = 0; rightBound < numsSize; rightBound++) {
     currSum += nums[rightBound];
 
-    // trim left bound until subarray sum < target
+    // trim values from left bound until subarray sum < target
     while ((currSum - nums[leftBound]) >= target && leftBound < rightBound) {
       currSum -= nums[leftBound];
       leftBound += 1;
