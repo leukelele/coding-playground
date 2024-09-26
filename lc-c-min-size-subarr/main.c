@@ -3,36 +3,33 @@
  * is no such subarray, return 0 instead.
  */
 #include <stdio.h>
+#include <limits.h>
+
 
 int minSubArrayLen(int target, int* nums, int numsSize) {
-  int minLen = 0;    // minimum length of subarray w sum >= target; default = 0
+  int minLen = INT_MAX;   // minimum length of subarray w sum >= target; default = 0
   int currLen = 0;        // current len of subarr
   int currSum = 0;        // current sum of subarr
   int leftBound = 0;      // subarray left bound
   int rightBound = 0;     // subarray right bound
 
-  int firstMin = 1;
+  // expand subarr right bound until end
+  for (rightBound = 0; rightBound < numsSize; rightBound++) {
+    currSum += nums[rightBound];
 
-  for (int i = rightBound; i < numsSize; i++) {
-
-    // increment right bound until subarray w sum >= target
-    currSum += nums[i];
-    if (currSum >= target) rightBound = i;
-
-    // trim left bound until subarray w sum < target
-    while (leftBound < i && (currSum - nums[leftBound]) >= target) {
+    // trim left bound until subarray sum < target
+    while ((currSum - nums[leftBound]) >= target && leftBound < rightBound) {
       currSum -= nums[leftBound];
       leftBound += 1;
     }
 
-    // update minLen for shorter subarray length w sum >= target
+    // update minLen for shorter subarray length >= target
     currLen = rightBound - leftBound + 1;
-    if (currSum >= target && firstMin == 1) {
-      minLen = currLen;
-      firstMin = 0;
-    }
-    else if (currSum >= target && currLen < minLen) minLen = currLen;
+    if (currLen < minLen && currSum >= target) minLen = currLen;
   }
+
+  // returns 0 if no min length was found
+  if (minLen == INT_MAX) return 0;
 
   return minLen;
 }
